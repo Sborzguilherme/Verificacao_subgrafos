@@ -9,9 +9,10 @@
 
 using namespace std;
 
-struct vertice_nivel{
-     int nivel;
-     bool verficado;
+struct vertice_nivel
+{
+    int nivel;
+    bool verificado;
 };
 
 class MatrizAdj
@@ -20,7 +21,6 @@ private:
     int vertices;
     bool dirigida;
     bool **matriz;
-
     vector<vertice_nivel> vet_transitivo_direto;
     vector<vertice_nivel> vet_transitivo_inverso;
 
@@ -33,19 +33,18 @@ public:
     bool **getMatriz() const;
     void setMatriz(bool **value);
 
-
-    void add_vertice(int origem, int destino);
-    void caminho_profundidade();
-    void caminho_largura();
-    void fecho_transitivo_direto(int vertice_inicial, bool direto);
-    void print_matriz();
-    //vertice_nivel cria_vetor_fecho_transitivo();
-
-
     vector<vertice_nivel> getVet_transitivo_direto() const;
     void setVet_transitivo_direto(const vector<vertice_nivel> &value);
     vector<vertice_nivel> getVet_transitivo_inverso() const;
     void setVet_transitivo_inverso(const vector<vertice_nivel> &value);
+
+    void add_vertice(int origem, int destino);
+    void caminho_profundidade(int inicio);
+    void caminho_largura(int inicio);
+    void fecho_transitivo(int vertice_inicial, bool direto);
+    void determina_subgrafo();
+    void print_matriz();
+
 };
 
 #endif // MATRIZADJ_H

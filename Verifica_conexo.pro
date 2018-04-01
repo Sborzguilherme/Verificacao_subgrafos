@@ -4,13 +4,14 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-    ../../Busca_larg_prof/Grafos/main.cpp \
-    ../../Busca_larg_prof/Grafos/matrizadj.cpp
+    matrizadj.cpp \
+    main.cpp
 
 DISTFILES += \
-    ../../Busca_larg_prof/Grafos/m1.txt \
-    ../../Busca_larg_prof/Grafos/m2.txt \
-    ../../Busca_larg_prof/Grafos/m3.txt
+    m3.txt \
+    m2.txt \
+    m1.txt \
+    m4.txt
 
 HEADERS += \
-    ../../Busca_larg_prof/Grafos/matrizadj.h
+    matrizadj.h
