@@ -136,7 +136,7 @@ MatrizAdj abre_grafo(){
     cout<< endl << " > Informe o caminho do arquivo com o grafo:" << endl;
     cout<<"->> ";
     cin>>caminho;
-    leitura.open("C:/Users/Guilherme/Documents/Univali/7 Periodo/Grafos/Busca_larg_prof/Verifica_conexo/Verifica_conexo/m3.txt");
+    leitura.open("C:/Users/Guilherme/Documents/Univali/7 Periodo/Grafos/Trabalho_M1/Final/Verifica_conexo/Verifica_conexo/m3.txt");
     if(!leitura.is_open( )){
         cout<< "Nao foi possível abrir arquivo!" << endl;
         leitura.clear( ); //reseta o objeto leitura, para limpar memória do sistema
@@ -230,7 +230,7 @@ MatrizAdj cria_grafo(){
 void salva_grafo(MatrizAdj grafo, string nome){
     ofstream arquivo;
 
-    arquivo.open("C:/Users/Guilherme/Documents/Univali/7 Periodo/Grafos/Busca_larg_prof/Verifica_conexo/Verifica_conexo/"+nome);
+    arquivo.open("C:/Users/Guilherme/Documents/Univali/7 Periodo/Grafos/Trabalho_M1/Final/Verifica_conexo/Verifica_conexo/"+nome);
     bool **matriz = grafo.getMatriz();
     if(arquivo.is_open()){
         arquivo<< grafo.getVertices() << endl;
