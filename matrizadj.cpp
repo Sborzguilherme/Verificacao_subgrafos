@@ -63,30 +63,28 @@ void MatrizAdj::add_vertice(int origem, int destino)
 void MatrizAdj::caminho_profundidade(int inicio)
 {
     stack<int> pilha;
-    list <int> hist_visita;
-    bool visitado[vertices]={};
+    list <int> hist_visita;                // Salva a ordem de vértices visitados
+    bool visitado[vertices]={};            // Salva quais vértices foram visitados
     bool fim = false;
     int atual = inicio-1;                  // 1º vertice
     do{
-        pilha.push(atual);
+        pilha.push(atual);                 //Empilha o vértice inicial (e vértice inicial desconexo)
         while(!pilha.empty()){
-            atual = pilha.top();
-            //cout<< "Vertice" << atual << endl;
+            atual = pilha.top();           // Vértice desempilhado é verificado
             pilha.pop();
-            //cout<< "Pilha" << pilha.size() << endl;
             if(!visitado[atual]){
-                visitado[atual] = true;
-                hist_visita.push_back(atual);
+                visitado[atual] = true;                         // Marca o vértice como visitado
+                hist_visita.push_back(atual);                   // Adiciona o vértice ao vetor de visitas
                 for(int i = 0; i < vertices; i++){
-                    if(this->matriz[atual][i]){ pilha.push(i); /*cout<< "v add" << i << endl;*/}
+                    if(this->matriz[atual][i]){ pilha.push(i);} // Empilha os adjascentes do vértice verificado
                 }
             }
         }
         fim = true;
         for(int i = 0; i < vertices; i++){
-            if(!visitado[i]){
+            if(!visitado[i]){                   // Verifica se algum vértice não foi visitado
                 fim = false;
-                atual = i;
+                atual = i;                      // Vertice ainda não visitado é o novo vertice atual
                 break;
             }
         }
@@ -141,7 +139,7 @@ void MatrizAdj::caminho_largura(int inicio)
 void MatrizAdj::fecho_transitivo(int vertice_inicial, bool direto)
 {
     //Vetor de structs
-    vector<vertice_nivel> vetor_niveis;
+    vector<vertice_nivel> vetor_niveis;         // Struct que da aos vértices duas propriedades : nivel e verificado
     int nivel_atual = 0;
     bool verifica = true;
 
@@ -156,15 +154,15 @@ void MatrizAdj::fecho_transitivo(int vertice_inicial, bool direto)
     //Valor passado como parâmetro é o vértice inicial (recebe nível 0)
     vetor_niveis.at(vertice_inicial).nivel = 0;
     vetor_niveis.at(vertice_inicial).verificado = true;
-    nivel_atual++;
+    nivel_atual++;                                      // nivel_atual = nivel do vertice atual+1
     do{
-        if(direto == true){
+        if(direto == true){                             // Fecho Transitivo Direto
             for(int i=0;i<vertices;i++){
                 if(this->matriz[vertice_inicial][i] == 1 && vetor_niveis.at(i).nivel == -1){
-                    vetor_niveis.at(i).nivel = nivel_atual;
+                    vetor_niveis.at(i).nivel = nivel_atual; // Marca os adjascentes do vértice verificado com o nivel atual
                 }
             }
-        }else{
+        }else{                                          // Fecho Transitivo Inverso
             for(int i=0;i<vertices;i++){
                 if(this->matriz[i][vertice_inicial] == 1 && vetor_niveis.at(i).nivel == -1){
                     vetor_niveis.at(i).nivel = nivel_atual;
@@ -172,7 +170,8 @@ void MatrizAdj::fecho_transitivo(int vertice_inicial, bool direto)
             }
         }
         verifica = false;
-        //Verificação do nível atual;
+        //Verificação do nível atual
+        //(Garante que o nivel atual só seja incrementado quando todos os vértices cujo nivel = nivel atual ja tenham sido verificados)
         for(int i=0;i<vertices;i++){
             if(vetor_niveis.at(i).verificado == false){
                 if((vetor_niveis.at(i).nivel < nivel_atual) && (vetor_niveis.at(i).nivel != -1)){
@@ -183,11 +182,11 @@ void MatrizAdj::fecho_transitivo(int vertice_inicial, bool direto)
         //Seleção do próximo vertice a ser verificado
         for(int i=0;i<vertices;i++){
             vertice_nivel atual = vetor_niveis.at(i);
-            if((atual.nivel == nivel_atual) && (atual.verificado == false)){
+            if((atual.nivel == nivel_atual) && (atual.verificado == false)){ // Próximo vértice verificado é aquele que ainda não foi verificado e possui nivel = nivel_atual
                 vertice_inicial = i;
                 //cout<<endl<<i<<endl;
                 vetor_niveis.at(i).verificado = true;
-                nivel_atual++;
+                nivel_atual++;      // Nivel atual é incrementado para atualização dos niveis dos vértices adjascentes ao vértice sendo atualmente verificado
                 verifica = true;
                 break; // FOR EXIT
             }
@@ -219,13 +218,14 @@ void MatrizAdj::determina_subgrafo()
     int cont = this->vertices;
     int subgrafos[this->vertices];
 
+    //Chama fecho transitivo direto e inverso do primeiro vértice do grafo
     fecho_transitivo(0,true);
     fecho_transitivo(0,false);
 
     //Monta vetor de instersecção
     for(int i=0; i<this->vertices; i++){
         subgrafos[i] = 0; //inicialização do vetor subgrafos
-        if(this->vet_transitivo_direto.at(i).nivel != -1 && this->vet_transitivo_inverso.at(i).nivel != -1){
+        if(this->vet_transitivo_direto.at(i).nivel != -1 && this->vet_transitivo_inverso.at(i).nivel != -1){ // Verifica os vértices retornados pela função de fecho transitivo (direto e inverso)
             interseccao[i] = 1;
             subgrafos[i] = nivel_subgrafo; //Interseções iniciais formam o primeiro subgrafo
             cont--;                        // Decrementa a qtd de vértices restantes para serem verificados
@@ -235,7 +235,7 @@ void MatrizAdj::determina_subgrafo()
     }
     //Verifica se o grafo é conexo
     for(int i=0; i<this->vertices; i++){
-        if(interseccao[i] == 0){
+        if(interseccao[i] == 0){            // Se algum vértice não for retornado sabe-se que o grafo não é conexo
             cout<<endl<<endl;
             cout<<" ->> Grafo não conexo"<<endl<<endl;
             break;
@@ -249,6 +249,7 @@ void MatrizAdj::determina_subgrafo()
         for(int i=0;i<this->vertices;i++){
             if(subgrafos[i] == 0){
                 nivel_subgrafo++;       //novo subgrafo será formado
+                // Funções de fecho transitivo são chamadas para um dos vértices não retornados
                 fecho_transitivo(i,true);
                 fecho_transitivo(i,false);
 
